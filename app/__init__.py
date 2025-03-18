@@ -1,14 +1,10 @@
 from flask import Flask
-from flask_mysqldb import MySQL
+from config.database import init_db, mysql
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
 
-# Configuração do banco de dados
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'  # Altere se seu usuário não for root
-app.config['MYSQL_PASSWORD'] = 'sua_senha'  # Substitua pela senha do seu MySQL
-app.config['MYSQL_DB'] = 'aluguel_cacambas'  # Nome do banco de dados
+    # Configurar banco de dados
+    init_db(app)
 
-# Inicializar a conexão com o MySQL
-mysql = MySQL(app)
-
+    return app
