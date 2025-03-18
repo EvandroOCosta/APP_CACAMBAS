@@ -1,14 +1,10 @@
-#from flask_mysql_connector import MySQL
-from flask_mysqldb import MySQL
+from flask_sqlalchemy import SQLAlchemy
 
-
-mysql = MySQL()
+db = SQLAlchemy()
 
 def init_db(app):
-    """Inicializa o banco de dados no Flask"""
-    app.config['MYSQL_HOST'] = 'localhost'
-    app.config['MYSQL_USER'] = 'root'  # Altere se necessário
-    app.config['MYSQL_PASSWORD'] = 'sua_senha'  # Substitua pela senha correta
-    app.config['MYSQL_DB'] = 'aluguel_cacambas'
+    """Inicializa o banco de dados no Flask com SQLAlchemy"""
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:sua_senha@localhost/aluguel_cacambas'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    mysql.init_app(app)
+    db.init_app(app)
