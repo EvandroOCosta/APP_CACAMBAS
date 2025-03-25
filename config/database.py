@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()  # Criamos uma única instância global do SQLAlchemy
+db = SQLAlchemy()  # Instância única do SQLAlchemy
 
 def init_db(app):
     """Inicializa o banco de dados e vincula ao app Flask"""

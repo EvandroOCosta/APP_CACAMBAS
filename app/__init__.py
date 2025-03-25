@@ -7,8 +7,9 @@ def create_app():
     # Inicializa o banco de dados corretamente
     init_db(app)
 
+    # Criar tabelas dentro do contexto da aplicação
     with app.app_context():
-        db.create_all()  # Cria as tabelas dentro do contexto correto
+        db.create_all()
 
     # Importa e registra rotas dentro do contexto correto
     from app.routes.users import bp as users_bp
