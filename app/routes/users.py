@@ -40,3 +40,50 @@ def create_user():
         return jsonify({"error": str(e)}), 500
     finally:
         db.session.close()
+
+@bp.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.get(user_id)  # Busca o usuário pelo ID
+
+    if not user:
+        return jsonify({"error": "Usuário não encontrado"}), 404
+
+    return jsonify({
+        "id": user.id,
+        "name": user.name,
+        "email": user.email
+    })
+
+@bp.route('/users/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    user = User.query.get(user_id)  # Busca o usuário pelo ID
+
+    if not user:
+        return jsonify({"error": "Usuário não encontrado"}), 404
+
+    data = request.get_json()  # Recebe os novos dados
+
+    # Atualiza apenas os campos enviados na requisição
+    if "name" in data:
+        user.name = data["name"]
+    if "email" in data:
+        user.email = data["email"]
+    if "password" in data:
+        user.password = data["password"]
+
+    try:
+        db.session.commit()
+        return jsonify({
+            "message": "Usuário atualizado com sucesso!",
+            "user": {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email
+            }
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.session.close()
+
