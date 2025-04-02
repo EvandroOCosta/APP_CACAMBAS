@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from config.database import db
 from app.models.user import User
+from werkzeug.security import generate_password_hash, check_password_hash
 
 bp = Blueprint('users', __name__)
 
@@ -13,22 +14,31 @@ def get_users():
         return jsonify(users_list)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        db.session.close()  # Garante que a sessão do banco de dados seja fechada corretamente
 
+# Rota para criar um usuário
 @bp.route('/users', methods=['POST'])
 def create_user():
-    data = request.get_json()  # Recebe os dados do corpo da requisição
+    data = request.get_json()
 
-    # Validação básica
+    # Validação de campos obrigatórios e vazios
     if not data or not all(key in data for key in ["name", "email", "password"]):
-        return jsonify({"error": "Dados inválidos. Os campos 'name', 'email' e 'password' são obrigatórios."}), 400
+        return jsonify({"error": "Os campos 'name', 'email' e 'password' são obrigatórios."}), 400
 
-    # Criar novo usuário
+    if not data["name"].strip() or not data["email"].strip() or not data["password"].strip():
+        return jsonify({"error": "Todos os campos devem ser preenchidos."}), 400
+
+    # Verifica se o e-mail já está cadastrado
+    existing_user = User.query.filter_by(email=data["email"]).first()
+    if existing_user:
+        return jsonify({"error": "E-mail já cadastrado."}), 400
+
+    # Criptografa a senha antes de salvar
+    hashed_password = generate_password_hash(data["password"])
+
     new_user = User(
         name=data["name"],
         email=data["email"],
-        password=data["password"]
+        password=hashed_password
     )
 
     try:
@@ -38,12 +48,11 @@ def create_user():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-    finally:
-        db.session.close()
 
+# Rota para buscar um usuário por ID
 @bp.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
-    user = User.query.get(user_id)  # Busca o usuário pelo ID
+    user = User.query.get(user_id)
 
     if not user:
         return jsonify({"error": "Usuário não encontrado"}), 404
@@ -54,42 +63,38 @@ def get_user(user_id):
         "email": user.email
     })
 
+# Rota para atualizar um usuário
 @bp.route('/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
-    user = User.query.get(user_id)  # Busca o usuário pelo ID
+    user = User.query.get(user_id)
 
     if not user:
         return jsonify({"error": "Usuário não encontrado"}), 404
 
-    data = request.get_json()  # Recebe os novos dados
+    data = request.get_json()
 
-    # Atualiza apenas os campos enviados na requisição
-    if "name" in data:
+    if "name" in data and data["name"].strip():
         user.name = data["name"]
-    if "email" in data:
+    if "email" in data and data["email"].strip():
+        # Verifica se o e-mail já está sendo usado por outro usuário
+        existing_user = User.query.filter_by(email=data["email"]).first()
+        if existing_user and existing_user.id != user.id:
+            return jsonify({"error": "E-mail já cadastrado por outro usuário."}), 400
         user.email = data["email"]
-    if "password" in data:
-        user.password = data["password"]
+    if "password" in data and data["password"].strip():
+        user.password = generate_password_hash(data["password"])
 
     try:
         db.session.commit()
-        return jsonify({
-            "message": "Usuário atualizado com sucesso!",
-            "user": {
-                "id": user.id,
-                "name": user.name,
-                "email": user.email
-            }
-        }), 200
+        return jsonify({"message": "Usuário atualizado com sucesso!", "user": {"id": user.id, "name": user.name, "email": user.email}}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-    finally:
-        db.session.close()
 
+# Rota para deletar um usuário
 @bp.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    user = User.query.get(user_id)  # Busca o usuário pelo ID
+    user = User.query.get(user_id)
 
     if not user:
         return jsonify({"error": "Usuário não encontrado"}), 404
@@ -101,5 +106,3 @@ def delete_user(user_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-    finally:
-        db.session.close()

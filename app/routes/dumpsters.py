@@ -1,49 +1,82 @@
 from flask import Blueprint, request, jsonify
+from config.database import db
+from app.models.dumpster import Dumpster
+
 
 bp = Blueprint('dumpsters', __name__)
-
-# Simulação de banco de dados em memória
-dumpsters = [
-    {"id": 1, "location": "Rua A, 123", "size": "5m³"},
-    {"id": 2, "location": "Av. B, 456", "size": "7m³"}
-]
 
 # 🟢 GET - Listar todas as caçambas
 @bp.route('/dumpsters', methods=['GET'])
 def get_dumpsters():
-    return jsonify(dumpsters)
+    try:
+        dumpsters = Dumpster.query.all()
+        return jsonify([{"id": d.id, "location": d.location, "size": d.size} for d in dumpsters])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.session.close()
 
 # 🟢 POST - Criar uma nova caçamba
 @bp.route('/dumpsters', methods=['POST'])
 def create_dumpster():
     data = request.get_json()
-    new_id = max(d['id'] for d in dumpsters) + 1 if dumpsters else 1
-    new_dumpster = {"id": new_id, "location": data["location"], "size": data["size"]}
-    dumpsters.append(new_dumpster)
-    return jsonify(new_dumpster), 201
+    if not data or not all(key in data for key in ["location", "size"]):
+        return jsonify({"error": "Os campos 'location' e 'size' são obrigatórios."}), 400
+
+    new_dumpster = Dumpster(location=data["location"], size=data["size"])
+    try:
+        db.session.add(new_dumpster)
+        db.session.commit()
+        return jsonify({"message": "Caçamba criada com sucesso!", "dumpster": {"id": new_dumpster.id, "location": new_dumpster.location, "size": new_dumpster.size}}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.session.close()
 
 # 🟢 GET - Buscar uma caçamba específica
 @bp.route('/dumpsters/<int:id>', methods=['GET'])
 def get_dumpster(id):
-    dumpster = next((d for d in dumpsters if d["id"] == id), None)
+    dumpster = Dumpster.query.get(id)
     if not dumpster:
         return jsonify({"error": "Caçamba não encontrada"}), 404
-    return jsonify(dumpster)
+    return jsonify({"id": dumpster.id, "location": dumpster.location, "size": dumpster.size})
 
 # 🟢 PUT - Atualizar uma caçamba
 @bp.route('/dumpsters/<int:id>', methods=['PUT'])
 def update_dumpster(id):
-    data = request.get_json()
-    dumpster = next((d for d in dumpsters if d["id"] == id), None)
+    dumpster = Dumpster.query.get(id)
     if not dumpster:
         return jsonify({"error": "Caçamba não encontrada"}), 404
-    dumpster.update({"location": data.get("location", dumpster["location"]),
-                     "size": data.get("size", dumpster["size"])})
-    return jsonify(dumpster)
+
+    data = request.get_json()
+    if "location" in data:
+        dumpster.location = data["location"]
+    if "size" in data:
+        dumpster.size = data["size"]
+
+    try:
+        db.session.commit()
+        return jsonify({"message": "Caçamba atualizada com sucesso!", "dumpster": {"id": dumpster.id, "location": dumpster.location, "size": dumpster.size}}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.session.close()
 
 # 🟢 DELETE - Remover uma caçamba
 @bp.route('/dumpsters/<int:id>', methods=['DELETE'])
 def delete_dumpster(id):
-    global dumpsters
-    dumpsters = [d for d in dumpsters if d["id"] != id]
-    return jsonify({"message": "Caçamba removida com sucesso"}), 200
+    dumpster = Dumpster.query.get(id)
+    if not dumpster:
+        return jsonify({"error": "Caçamba não encontrada"}), 404
+
+    try:
+        db.session.delete(dumpster)
+        db.session.commit()
+        return jsonify({"message": "Caçamba removida com sucesso!"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.session.close()

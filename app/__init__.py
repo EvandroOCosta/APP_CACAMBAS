@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_migrate import Migrate  # Adiciona Flask-Migrate
 from config.database import db, init_db
 
 def create_app():
@@ -7,9 +8,12 @@ def create_app():
     # Inicializa o banco de dados corretamente
     init_db(app)
 
+    # Inicializa o Flask-Migrate
+    Migrate(app, db)
+
     # Criar tabelas dentro do contexto da aplicação
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #    db.create_all()
 
     # Importa e registra rotas dentro do contexto correto
     from app.routes.main import bp as main_bp
