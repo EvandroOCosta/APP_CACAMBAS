@@ -27,6 +27,14 @@ def create_booking():
 def get_bookings():
     return jsonify(bookings_db), 200
 
+# Obter uma reserva por ID (GET)
+@bp.route('/bookings/<int:booking_id>', methods=['GET'])
+def get_booking(booking_id):
+    for booking in bookings_db:
+        if booking["id"] == booking_id:
+            return jsonify(booking), 200
+    return jsonify({"error": "Booking not found"}), 404
+
 # Atualizar uma reserva por ID (PUT)
 @bp.route('/bookings/<int:booking_id>', methods=['PUT'])
 def update_booking(booking_id):

@@ -1,0 +1,49 @@
+
+Próximos Passos para Evoluir sua API Flask
+==========================================
+
+1. Persistência Real com Banco de Dados
+---------------------------------------
+- Criar o modelo Booking em models/booking.py
+- Usar SQLAlchemy para persistência real (como nos modelos existentes)
+- Migrar as rotas de /bookings para usar o banco de dados
+
+Benefício: mantém dados salvos após reiniciar a aplicação.
+
+2. Validações de Dados
+----------------------
+- Verificar se e-mail tem formato válido
+- Impedir campos em branco
+- Verificar existência de user_id e dumpster_id ao criar Booking
+
+Benefício: evita erros e dados inconsistentes.
+
+3. Autenticação e Autorização
+-----------------------------
+- Adicionar login com geração de token (JWT, sessão, etc.)
+- Criar rota /login
+- Proteger rotas com autenticação (ex: bookings)
+
+Benefício: mais segurança e controle de acesso.
+
+4. Testes Automatizados com pytest
+----------------------------------
+- Criar testes automatizados na pasta tests/
+- Verificar todos os endpoints com dados de exemplo
+
+Benefício: mais confiança ao modificar o sistema, evita regressões.
+
+5. Documentação com Swagger ou README
+-------------------------------------
+- Usar flasgger, apispec ou criar um README.md com exemplos de uso
+- Incluir cURLs e descrição de cada rota
+
+Benefício: facilita para outros desenvolvedores e para o cliente.
+
+6. Deploy (Colocar no Ar)
+--------------------------
+- Subir a API para um servidor (Heroku, Render, Railway ou AWS)
+- Usar Gunicorn + Flask
+- Configurar banco remoto (MySQL/PostgreSQL)
+
+Benefício: você pode mostrar seu projeto funcionando online.
