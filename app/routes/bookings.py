@@ -1,56 +1,49 @@
+# app/routes/bookings.py
 from flask import Blueprint, request, jsonify
+from app.models.booking import Booking
+from config.database import db
 
 bp = Blueprint('bookings', __name__)
 
-# Simulação de banco de dados
-bookings_db = []
-booking_id_counter = 1
-
-# Criar uma reserva (POST)
 @bp.route('/bookings', methods=['POST'])
 def create_booking():
-    global booking_id_counter
     data = request.get_json()
-    new_booking = {
-        "id": booking_id_counter,
-        "user_id": data["user_id"],
-        "dumpster_id": data["dumpster_id"],
-        "start_date": data["start_date"],
-        "end_date": data["end_date"]
-    }
-    bookings_db.append(new_booking)
-    booking_id_counter += 1
-    return jsonify(new_booking), 201
+    booking = Booking(
+        user_id=data["user_id"],
+        dumpster_id=data["dumpster_id"],
+        start_date=data["start_date"],
+        end_date=data["end_date"]
+    )
+    db.session.add(booking)
+    db.session.commit()
+    return jsonify(booking.to_dict()), 201
 
-# Listar todas as reservas (GET)
 @bp.route('/bookings', methods=['GET'])
 def get_bookings():
-    return jsonify(bookings_db), 200
+    bookings = Booking.query.all()
+    return jsonify([b.to_dict() for b in bookings]), 200
 
-# Obter uma reserva por ID (GET)
-@bp.route('/bookings/<int:booking_id>', methods=['GET'])
-def get_booking(booking_id):
-    for booking in bookings_db:
-        if booking["id"] == booking_id:
-            return jsonify(booking), 200
-    return jsonify({"error": "Booking not found"}), 404
-
-# Atualizar uma reserva por ID (PUT)
 @bp.route('/bookings/<int:booking_id>', methods=['PUT'])
 def update_booking(booking_id):
-    data = request.get_json()
-    for booking in bookings_db:
-        if booking["id"] == booking_id:
-            booking["user_id"] = data.get("user_id", booking["user_id"])
-            booking["dumpster_id"] = data.get("dumpster_id", booking["dumpster_id"])
-            booking["start_date"] = data.get("start_date", booking["start_date"])
-            booking["end_date"] = data.get("end_date", booking["end_date"])
-            return jsonify(booking), 200
-    return jsonify({"error": "Booking not found"}), 404
+    booking = Booking.query.get(booking_id)
+    if not booking:
+        return jsonify({"error": "Booking não encontrado"}), 404
 
-# Excluir uma reserva por ID (DELETE)
+    data = request.get_json()
+    booking.user_id = data.get("user_id", booking.user_id)
+    booking.dumpster_id = data.get("dumpster_id", booking.dumpster_id)
+    booking.start_date = data.get("start_date", booking.start_date)
+    booking.end_date = data.get("end_date", booking.end_date)
+    
+    db.session.commit()
+    return jsonify(booking.to_dict()), 200
+
 @bp.route('/bookings/<int:booking_id>', methods=['DELETE'])
 def delete_booking(booking_id):
-    global bookings_db
-    bookings_db = [booking for booking in bookings_db if booking["id"] != booking_id]
-    return jsonify({"message": "Booking deleted"}), 200
+    booking = Booking.query.get(booking_id)
+    if not booking:
+        return jsonify({"error": "Booking não encontrado"}), 404
+
+    db.session.delete(booking)
+    db.session.commit()
+    return jsonify({"message": "Booking deletado com sucesso"}), 200

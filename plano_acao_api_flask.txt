@@ -1,0 +1,55 @@
+
+PLANO DE AÇÃO PARA DESENVOLVIMENTO DA API FLASK
+
+✅ 1. Persistência Real com Banco de Dados
+Objetivo: Criar o modelo Booking e fazer com que as rotas /bookings usem banco de dados.
+
+Passos:
+1. Criar models/booking.py com o modelo Booking:
+   - Campos: id, user_id, dumpster_id, start_date, end_date
+   - Relacionamentos com User e Dumpster
+
+2. Criar as rotas CRUD de Booking em routes/bookings.py usando SQLAlchemy.
+
+3. Atualizar criar_tabelas.py para incluir o Booking.
+
+⏳ 2. Validações de Dados
+Objetivo: Garantir dados consistentes ao criar reservas (Bookings).
+
+Passos:
+1. Verificar se email é válido (ao criar usuário).
+2. Impedir campos em branco (request.get_json() com validação manual ou usando Marshmallow).
+3. Conferir se user_id e dumpster_id existem ao criar Booking.
+
+🔐 3. Autenticação e Autorização
+Objetivo: Proteger rotas como /bookings.
+
+Passos:
+1. Criar rota /login que gera um token JWT ao autenticar o usuário.
+2. Criar decorator @token_required para proteger rotas.
+3. Exigir autenticação para criar/listar bookings.
+
+🧪 4. Testes Automatizados com pytest
+Objetivo: Testar todos os endpoints automaticamente.
+
+Passos:
+1. Criar pasta tests/ com test_users.py, test_bookings.py, etc.
+2. Criar dados de exemplo com pytest fixtures.
+3. Verificar respostas esperadas com assert.
+
+📘 5. Documentação com Swagger ou README
+Objetivo: Facilitar o uso da API.
+
+Passos:
+1. Instalar e configurar flasgger ou apispec.
+2. Documentar rotas com exemplos de payload e respostas.
+3. Alternativamente, criar um README.md com exemplos de curl.
+
+🚀 6. Deploy
+Objetivo: Colocar o sistema online.
+
+Passos:
+1. Escolher plataforma: Render, Railway, Heroku, etc.
+2. Usar Gunicorn no Procfile.
+3. Subir código para o GitHub e conectar ao serviço.
+4. Configurar banco de dados remoto.

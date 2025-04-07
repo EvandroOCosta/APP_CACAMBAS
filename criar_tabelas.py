@@ -1,12 +1,18 @@
 from app import create_app
 from config.database import db
 
+# 🔄 Importa os modelos para que SQLAlchemy os reconheça
+from app.models.user import User
+from app.models.booking import Booking
+from app.models.review import Review
+from app.models.dumpster import Dumpster
+
+
 app = create_app()
 
 with app.app_context():
     print("Verificando conexão com o banco de dados...")
 
-    # Testa a conexão com o MySQL
     try:
         with db.engine.connect() as connection:
             print("✅ Conexão bem-sucedida com o MySQL!")
@@ -15,7 +21,9 @@ with app.app_context():
         exit()
 
     print("Apagando tabelas existentes...")
-    db.drop_all()  # Apaga todas as tabelas (se existirem)
+    db.drop_all()
+
     print("Criando novas tabelas...")
-    db.create_all()  # Cria as tabelas do zero
+    db.create_all()
+
     print("✅ Tabelas criadas com sucesso!")
