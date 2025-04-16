@@ -1,3 +1,4 @@
+# models/review.py
 from config.database import db
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship

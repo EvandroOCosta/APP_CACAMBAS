@@ -5,7 +5,7 @@ PLANO DE AÇÃO PARA DESENVOLVIMENTO DA API FLASK
 Objetivo: Criar o modelo Booking e fazer com que as rotas /bookings usem banco de dados.
 
 Passos:
-1. Criar models/booking.py com o modelo Booking:
+1. Criar models/booking.py com o modelo Booking: ok - 10/04/2025
    - Campos: id, user_id, dumpster_id, start_date, end_date
    - Relacionamentos com User e Dumpster
 

@@ -1,3 +1,4 @@
+# schemas/review_schema.py
 from marshmallow import Schema, fields, validate
 
 class ReviewSchema(Schema):
