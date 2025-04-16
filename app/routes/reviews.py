@@ -1,4 +1,5 @@
 #routes/reviews.py
+
 from flask import Blueprint, request, jsonify
 from config.database import db
 from app.models.review import Review
@@ -15,7 +16,8 @@ def get_reviews():
         "id": r.id,
         "comment": r.comment,
         "rating": r.rating,
-        "user_id": r.user_id
+        "user_id": r.user_id,
+        "dumpster_id": r.dumpster_id
     } for r in reviews])
 
 # GET - Obter uma avaliação por ID
@@ -28,7 +30,8 @@ def get_review(review_id):
         "id": review.id,
         "comment": review.comment,
         "rating": review.rating,
-        "user_id": review.user_id
+        "user_id": review.user_id,
+        "dumpster_id": review.dumpster_id
     })
 
 # POST - Criar uma nova avaliação
@@ -43,7 +46,8 @@ def create_review():
     new_review = Review(
         comment=data["comment"],
         rating=data["rating"],
-        user_id=data["user_id"]
+        user_id=data["user_id"],
+        dumpster_id=data["dumpster_id"]
     )
 
     try:
@@ -53,7 +57,8 @@ def create_review():
             "id": new_review.id,
             "comment": new_review.comment,
             "rating": new_review.rating,
-            "user_id": new_review.user_id
+            "user_id": new_review.user_id,
+            "dumpster_id": new_review.dumpster_id
         }), 201
     except Exception as e:
         db.session.rollback()
@@ -73,6 +78,8 @@ def update_review(review_id):
         review.rating = data["rating"]
     if "user_id" in data:
         review.user_id = data["user_id"]
+    if "dumpster_id" in data:
+        review.dumpster_id = data["dumpster_id"]
 
     try:
         db.session.commit()
@@ -80,7 +87,8 @@ def update_review(review_id):
             "id": review.id,
             "comment": review.comment,
             "rating": review.rating,
-            "user_id": review.user_id
+            "user_id": review.user_id,
+            "dumpster_id": review.dumpster_id
         })
     except Exception as e:
         db.session.rollback()

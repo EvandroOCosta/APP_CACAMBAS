@@ -10,5 +10,7 @@ class Review(db.Model):
     comment = Column(String(255), nullable=False)
     rating = Column(Integer, nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    dumpster_id = Column(Integer, ForeignKey('dumpsters.id'), nullable=False)
 
     user = relationship('User', backref='reviews')
+    dumpster = relationship('Dumpster', backref='reviews')
