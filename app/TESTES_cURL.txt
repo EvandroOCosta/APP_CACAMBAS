@@ -1,0 +1,27 @@
+# USERS
+POST: curl -X POST http://127.0.0.1:5000/users -H "Content-Type: application/json" -d "{\"name\": \"Ana Lima\", \"email\": \"ana.lima@example.com\", \"password\": \"senha123\"}"
+GET:
+GET (1):
+PUT:
+DELETE: 
+
+# DUMPSTERS
+POST: curl -X POST http://127.0.0.1:5000/dumpsters -H "Content-Type: application/json" -d "{\"location\": \"Rua das Caçambas, 123\", \"size\": \"5m³\"}"
+GET:
+GET (1):
+PUT:
+DELETE: 
+
+# REVIEW
+POST: 
+GET:
+GET (1):
+PUT:
+DELETE: 
+
+# BOOKINGS
+POST: 
+GET:
+GET (1):
+PUT:
+DELETE: 
