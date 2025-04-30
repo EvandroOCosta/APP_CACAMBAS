@@ -47,3 +47,19 @@ def delete_booking(booking_id):
     db.session.delete(booking)
     db.session.commit()
     return jsonify({"message": "Booking deletado com sucesso"}), 200
+
+# GET - Buscar uma reserva específica por ID
+@bp.route('/bookings/<int:booking_id>', methods=['GET'])
+def get_booking(booking_id):
+    booking = Booking.query.get(booking_id)
+    if not booking:
+        return jsonify({"error": "Reserva não encontrada"}), 404
+
+    return jsonify({
+        "id": booking.id,
+        "user_id": booking.user_id,
+        "dumpster_id": booking.dumpster_id,
+        "start_date": booking.start_date,
+        "end_date": booking.end_date
+    }), 200
+

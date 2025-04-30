@@ -1,23 +1,25 @@
 # USERS
 POST: curl -X POST http://127.0.0.1:5000/users -H "Content-Type: application/json" -d "{\"name\": \"Ana Lima\", \"email\": \"ana.lima@example.com\", \"password\": \"senha123\"}"
-GET:
-GET (1):
+GET: curl http://127.0.0.1:5000/users
+GET (1): curl http://127.0.0.1:5000/users/1
 PUT:
 DELETE: 
 
 # DUMPSTERS
-POST: curl -X POST http://127.0.0.1:5000/dumpsters -H "Content-Type: application/json" -d "{\"location\": \"Rua das Caçambas, 123\", \"size\": \"5m³\"}"
-GET:
-GET (1):
+POST: curl -X POST http://127.0.0.1:5000/dumpsters -H "Content-Type: application/json" -d "{\"location\": \"Rua Floresta, 670\", \"size\": \"5.5m³\"}"
+GET: curl http://127.0.0.1:5000/dumpsters
+GET (1): curl http://127.0.0.1:5000/dumpsters/1
 PUT:
 DELETE: 
 
 # REVIEW
-POST: 
-GET:
-GET (1):
-PUT:
-DELETE: 
+POST: curl -X POST http://127.0.0.1:5000/reviews -H "Content-Type: application/json" -d "{\"user_id\": 2, \"dumpster_id\": 2, \"rating\": 4, \"comment\": \"Vou Recomendar!!!!\"}"
+GET: curl http://127.0.0.1:5000/reviews
+GET (1): curl http://127.0.0.1:5000/reviews/1
+PUT: curl -X PUT http://127.0.0.1:5000/reviews/1 ^
+-H "Content-Type: application/json" ^
+-d "{\"comment\": \"GOSTEI MUITO!\", \"rating\": 4, \"user_id\": 1}" 
+DELETE: curl -X DELETE http://127.0.0.1:5000/reviews/1
 
 # BOOKINGS
 POST: 
