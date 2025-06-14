@@ -1,0 +1,109 @@
+Plano de Tarefas — Sprints do App de Aluguel de Caçambas
+
+Sprint 1 — Fortalecer o Backend (1 semana)
+
+Objetivo: API pronta para produção básica.
+Tarefas:
+
+Revisar modelos e tabelas.
+
+Implementar login/logout com JWT.
+
+Garantir criptografia de senha.
+
+Criar rota de cadastro de empresa.
+
+Testar autenticação via cURL/Postman.
+
+Criar scripts de migração com Flask-Migrate.
+Entregável: API funcional com autenticação e segurança mínima.
+
+Sprint 2 — Regras de Negócio & Painel Admin (1-2 semanas)
+
+Objetivo: Validar dados e permitir gestão.
+Tarefas:
+
+Implementar permissões (admin, cliente, empresa).
+
+Regras de negócio: reservas sem datas sobrepostas, avaliações somente para reservas.
+
+Rota para listar reservas de uma empresa.
+
+Criar painel básico com Flask-Admin/AppBuilder.
+
+Validar fluxo completo via navegador.
+Entregável: Backend robusto com regras e painel de gestão.
+
+Sprint 3 — Prototipar o App Mobile (2 semanas)
+
+Objetivo: Protótipo navegável.
+Tarefas:
+
+Escolher tecnologia (Flutter ou React Native).
+
+Criar protótipo com telas:
+
+Login/cadastro
+
+Busca de caçambas
+
+Detalhes da caçamba
+
+Reserva
+
+Avaliações
+
+Histórico de reservas
+
+Conectar protótipo à API com JWT.
+Entregável: App rodando em dispositivo real.
+
+Sprint 4 — Finalização e Deploy (2 semanas)
+
+Objetivo: Publicar versão Beta.
+Tarefas:
+
+Revisar segurança (rate limiting, CORS).
+
+Escolher hospedagem.
+
+Documentar a API (Swagger/Postman).
+
+Deploy da API.
+
+Testes com usuários reais.
+
+Preparar publicação para Play Store/App Store.
+Entregável: App Beta testado, backend online, documentação pronta.
+
+Resumo do Cronograma
+
+Sprint
+
+Duração
+
+Foco
+
+1
+
+1 semana
+
+Autenticação e segurança
+
+2
+
+1-2 semanas
+
+Regras de negócio e painel
+
+3
+
+2 semanas
+
+Protótipo mobile conectado
+
+4
+
+2 semanas
+
+Deploy e testes Beta

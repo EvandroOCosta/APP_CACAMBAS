@@ -2,15 +2,15 @@
 POST: curl -X POST http://127.0.0.1:5000/users -H "Content-Type: application/json" -d "{\"name\": \"Ana Lima\", \"email\": \"ana.lima@example.com\", \"password\": \"senha123\"}"
 GET: curl http://127.0.0.1:5000/users
 GET (1): curl http://127.0.0.1:5000/users/1
-PUT:
-DELETE: 
+PUT: curl -X PUT http://127.0.0.1:5000/users/1 -H "Content-Type: application/json" -d "{\"name\": \"Ana L. Souza\", \"email\": \"ana.souza@example.com\", \"password\": \"novasenha123\"}"
+DELETE: curl -X DELETE http://127.0.0.1:5000/users/1
 
 # DUMPSTERS
 POST: curl -X POST http://127.0.0.1:5000/dumpsters -H "Content-Type: application/json" -d "{\"location\": \"Rua Floresta, 670\", \"size\": \"5.5m³\"}"
 GET: curl http://127.0.0.1:5000/dumpsters
 GET (1): curl http://127.0.0.1:5000/dumpsters/1
-PUT:
-DELETE: 
+PUT: curl -X PUT http://127.0.0.1:5000/dumpsters/1 -H "Content-Type: application/json" -d "{\"location\": \"Av. Paulista, 1000\", \"size\": \"8m³\"}"
+DELETE: curl -X DELETE http://127.0.0.1:5000/dumpsters/1
 
 # REVIEW
 POST: curl -X POST http://127.0.0.1:5000/reviews -H "Content-Type: application/json" -d "{\"user_id\": 2, \"dumpster_id\": 2, \"rating\": 4, \"comment\": \"Vou Recomendar!!!!\"}"
@@ -22,8 +22,14 @@ PUT: curl -X PUT http://127.0.0.1:5000/reviews/1 ^
 DELETE: curl -X DELETE http://127.0.0.1:5000/reviews/1
 
 # BOOKINGS
-POST: 
-GET:
-GET (1):
-PUT:
-DELETE: 
+POST: curl -X POST http://127.0.0.1:5000/bookings -H "Content-Type: application/json" -d "{\"user_id\": 2, \"dumpster_id\": 2, \"start_date\": \"2025-05-01\", \"end_date\": \"2025-05-03\"}"
+GET: curl http://127.0.0.1:5000/bookings
+GET (1): curl http://127.0.0.1:5000/bookings/1
+PUT: curl -X PUT http://127.0.0.1:5000/bookings/1 -H "Content-Type: application/json" -d "{\"start_date\": \"2025-05-02\", \"end_date\": \"2025-05-06\"}"
+DELETE: curl -X DELETE http://127.0.0.1:5000/bookings/1
+
+# CONEXÃO COM O BANCO:
+sc query mysql80
+mysql -u root -p
+net start mysql80
+
